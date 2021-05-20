@@ -118,33 +118,32 @@ train$shot_made_flag <- as.factor(train$shot_made_flag)
 
 library(randomForest)
 set.seed(200)
-#rf = randomForest(shot_made_flag~., data=train, ntree=100, importance=T)
-#rf
-#prediction_for_table <- predict(rf, train)
-#trainig_error <- mean(train$shot_made_flag != prediction_for_table) * 100
-#paste("Trainig_error =", trainig_error, "%")
-#LogLoss(as.integer(train$shot_made_flag), as.integer(prediction_for_table))
-#confusionMatrix(prediction_for_table, as.factor(train$shot_made_flag))
-#missclassified <- sum(train$shot_made_flag != prediction_for_table)
-#paste("Total missclasified =", missclassified)
+rf = randomForest(shot_made_flag~., data=train, ntree=100, importance=T)
+rf
+prediction_for_table <- predict(rf, train)
+trainig_error <- mean(train$shot_made_flag != prediction_for_table) * 100
+paste("Trainig_error =", trainig_error, "%")
+LogLoss(as.integer(train$shot_made_flag), as.integer(prediction_for_table))
+confusionMatrix(prediction_for_table, as.factor(train$shot_made_flag))
+missclassified <- sum(train$shot_made_flag != prediction_for_table)
+paste("Total missclasified =", missclassified)
 
 
 
 library(rpart)
 set.seed(200)
-#fit <- rpart(shot_made_flag~., data = train, method = 'class')
-#p <- predict(fit, train, type = 'class')
-#trainig_error <- mean(train$shot_made_flag != p) * 100
-#paste("Trainig_error =", trainig_error, "%")
-#confusionMatrix(p, as.factor(train$shot_made_flag))
-#missclassified <- sum(train$shot_made_flag != p)
-#paste("Total missclasified =", missclassified)
+fit <- rpart(shot_made_flag~., data = train, method = 'class')
+p <- predict(fit, train, type = 'class')
+trainig_error <- mean(train$shot_made_flag != p) * 100
+paste("Trainig_error =", trainig_error, "%")
+confusionMatrix(p, as.factor(train$shot_made_flag))
+missclassified <- sum(train$shot_made_flag != p)
+paste("Total missclasified =", missclassified)
 
 
 
 test$shot_made_flag <- -1
 xtest <- sparse.model.matrix(shot_made_flag ~.-1, data=test)
-xtest
 predxgb <- predict(xgb, xtest)
 samples <- data.frame(shot_id = testids, shot_made_flag = predxgb)
 write.csv(samples, file = "sumbission.csv", row.names = F)
